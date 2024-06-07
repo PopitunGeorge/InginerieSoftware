@@ -1,0 +1,38 @@
+method identic6(x: array<int>) returns (rez: bool)
+  requires x.Length >= 1
+  ensures rez == (forall i :: 1 <= i < x.Length ==> x[i-1] == x[i])
+{
+  var i := 1;
+  rez := true;
+  while i < x.Length
+    invariant 1 <= i <= x.Length
+    invariant rez == (forall j :: 1 <= j < i ==> x[j-1] == x[j])
+  {
+    if x[i-1] != x[i] {
+      rez := false;
+    }
+    i := i + 1;
+  }
+}
+method power(a: real, p: int) returns (result: real)
+  requires a != 0.0
+  ensures result == a ** p
+{
+  var absP := if p < 0 then -p else p;
+  var res := 1.0;
+  var i := 0;
+
+  while i < absP
+    invariant 0 <= i <= absP
+    invariant res == a ** i
+  {
+    res := res * a;
+    i := i + 1;
+  }
+
+  if p < 0 {
+    result := 1.0 / res;
+  } else {
+    result := res;
+  }
+}
